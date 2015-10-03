@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="Pagination Build Process" default="main" basedir="./">
+
+	<tstamp>
+		<format property="NOW" pattern="yyyy-mm-dd"/>
+	</tstamp>
+	<property name="ExportDir" location="${basedir}\Export" />
+	<property name="ZipFile" location="${basedir}\Pagination-Release.zip" />
+
+
+	<target name="main" depends="precleanup,build,cleanup">
+		<echo>Built and cleaned!</echo>
+	</target>
+
+	<target name="precleanup">
+		<delete file="${ZipFile}" failonerror="false" />
+	</target>
+
+	<target name="build">
+		<mkdir dir="${ExportDir}" />
+		<!-- TODO: make svnant work
+		<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
+		<svn>
+			<export srcUrl="file:///d:/Subversion_Repository/Pagination" destPath="${ExportDir}" />
+		</svn> -->
+		<copy todir="${ExportDir}" >
+			<fileset dir="${basedir}" excludes=".project,build.xml" />
+		</copy>
+		<delete dir="${ExportDir}\Export" />
+		<zip basedir="${ExportDir}" zipfile="${ZipFile}" />
+	</target>
+
+	<target name="cleanup">
+		<delete dir="${ExportDir}" />
+	</target>
+
+</project>

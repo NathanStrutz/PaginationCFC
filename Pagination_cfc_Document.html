@@ -1,0 +1,672 @@
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+
+
+
+  /* default css */
+
+  table {
+    font-size: 1em;
+  }
+
+
+  div, address, ol, ul, li, option, select {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  p {
+    margin: 0px;
+  }
+
+  h6 { font-size: 10pt }
+  h5 { font-size: 11pt }
+  h4 { font-size: 12pt }
+  h3 { font-size: 13pt }
+  h2 { font-size: 14pt }
+  h1 { font-size: 16pt }
+
+  blockquote {padding: 10px; border: 1px #DDD dashed }
+
+  a img {border: 0}
+
+  strike { text-decoration: line-through }
+
+  div.google_header, div.google_footer {
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  /* end default css */
+
+
+    /* default print css */
+    @media print {
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      ol[type="a"] { list-style-type: lower-alpha }
+      ol[type="A"] { list-style-type: upper-alpha }
+      ol[type="i"] { list-style-type: lower-roman }
+      ol[type="I"] { list-style-type: upper-roman }
+
+      div.google_header, div.google_footer {
+        display: block;
+        min-height: 0;
+        border: none;
+      }
+
+      div.google_header {
+        flow: static(header);
+      }
+
+      /* used to insert page numbers */
+      div.google_header::before, div.google_footer::before {
+        position: absolute;
+	top: 0;
+      }
+
+      div.google_footer {
+        flow: static(footer);
+      }
+
+      /* always consider this element at the start of the doc */
+      div#google_footer {
+        flow: static(footer, start);
+      }
+
+      span.google_pagenumber {
+        content: counter(page);
+      }
+
+      span.google_pagecount {
+        content: counter(pages);
+      }
+    }
+
+    @page {
+      @top {
+        content: flow(header);
+      }
+      @bottom {
+        content: flow(footer);
+      }
+    }
+    /* end default print css */
+
+
+  /* custom css */
+
+
+  /* end custom css */
+
+  /* ui edited css */
+
+  body {
+    font-family: Verdana;
+
+    font-size: 10.0pt;
+    line-height: normal;
+    background-color: #ffffff;
+  }
+  /* end ui edited css */
+
+
+
+
+</style>
+
+
+</head>
+
+<body
+
+
+    revision="dhmcgmz3_27c2v79cgq:279">
+
+
+
+<h1>
+  Pagination.cfc Documentation
+</h1>
+<br>
+Pagination.cfc open source project<br>
+Nathan Strutz<br>
+http://www.dopefly.com/<br>
+<br>
+<br>
+<h2>
+  Index
+</h2>
+<ol>
+  <li>
+    <a href=#Section1 id=a1nt title="What is Pagination?">What is
+    Pagination?</a>
+  </li>
+  <li>
+    <a href=#Section2 id=o.5i title="Why Use Pagination.cfc?">Why Use
+    Pagination.cfc?</a>
+  </li>
+  <li>
+    <a href=#Section3 id=ak9y title="How to Use Pagination.cfc">How to Use
+    Pagination.cfc</a>
+  </li>
+  <li>
+    <a href=#Section4 id=uvc3 title="Pagination.cfc Property Reference">Pagination.cfc
+    Property Reference</a>
+  </li>
+  <li>
+    <a href=#Section5 id=fw1j title="Pagination.cfc Styling Reference">Pagination.cfc
+    Styling Reference</a><br>
+  </li>
+  <li>
+    <a href=#Section6 id=ss4r title="Extending Pagination.cfc">Extending
+    Pagination.cfc</a><br>
+  </li>
+  <a href=#Section6 id=zixy title="Extending Pagination.cfc"></a>
+</ol>
+<br>
+<br>
+<br>
+<h2>
+  <a id=s22v name=Section1></a>1. What Is Pagination?
+</h2>
+<br>
+Pagination is the practice of splitting your data into multiple pages and
+allowing navigation both to, and between those pages. It is sometimes called
+NextN Navigation.<br>
+<br>
+Example 1, you may have 300 products to display on a page. Displaying them all
+would be unreasonable, however, displaying 10 or 20 at a time makes sense. This
+is where you would bring in pagination.<br>
+<br>
+Example 2, you may be creating a mail application. Pagination could be easily
+used in 2 places here. First, to limit the number of message subjects displayed
+on the message list page. Second, to handle next / previous controls when
+viewing an individual message.<br>
+<br>
+<br>
+<h2>
+  <a id=xyso name=Section2></a>2. Why use Pagination.cfc?
+</h2>
+<br>
+Years ago, when creating my first&nbsp; pagination routine, I was surprised at
+how many lines of code it took, even for an instance specific, non-customizable,
+single-use solution. I was making a messaging system and needed to limit the
+number of records shown, so I created 2 "NextN" navigation systems to handle
+pagination. Years later, I used my hindsight to spot the problem: too many lines
+of code for a non-reusable solution. Something needed to be done.<br>
+<br>
+Pagination.cfc offers a customizable, reusable pagination solution that won't
+make you write too many lines of untested code. Pagination.cfc offers an easy,
+friendly solution. Open source means higher quality, and Pagination.cfc has
+undergone unit tests and peer reviews.<br>
+<br>
+<br>
+<h2>
+  <a id=pjt5 name=Section3></a>3. How to use Pagination.cfc
+</h2>
+<br>
+There are 6 steps to using Pagination.cfc<br>
+<br>
+<ol>
+  <li>
+    Copy Pagination.cfc into your application
+  </li>
+  <li>
+    Instantiate the Pagination component
+  </li>
+  <li>
+    Give Pagination.cfc the data to be paginated
+  </li>
+  <li>
+    Set your other output preferences
+  </li>
+  <li>
+    Output the generated HTML from Pagination.cfc
+  </li>
+  <li>
+    Use the calculated properties in Patination.cfc in other places
+  </li>
+</ol>
+<br>
+<br>
+<p>
+  <b>1. Copy Pagination.cfc into your application</b>
+</p>
+<p>
+  <br>
+</p>
+I suggest putting it where your other components (CFCs) live, more
+appropriately, in a utilities package. If your components don't have a home, or
+if you don't use any, you can put them in a /components/ folder off of your
+application root. It really doesn't matter, though.<br>
+<br>
+<p>
+  <b>2. Instantiate the Pagination component</b>
+</p>
+<p>
+  <br>
+</p>
+Much like you would do with any other component. I prefer using the createObject
+function.<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset pagination =
+createObject("component", "components.Pagination").init() /&gt;</span><br>
+<br>
+<p>
+  <b>3. Give Pagination.cfc the data to be paginated</b>
+</p>
+<p>
+  <br>
+</p>
+Pagination.cfc can paginate queries, arrays or structures. In this way, nothing
+stops you from paginating over structs of arrays or arrays of structs, etc.<br>
+<br>
+<span style="FONT-FAMILY:Courier New"> &lt;cfset
+pagination.setQueryToPaginate(myQuery) /&gt;</span><br>
+or<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset
+pagination.setArrayToPaginate(myArray) /&gt;</span><br>
+<br>
+This is an important step! Without it, Pagination.cfc will throw an error when
+you ask it to render the output HTML.<br>
+<br>
+<p>
+  <b>4. Set your other output preferences</b>
+</p>
+<p>
+  <br>
+</p>
+It is recommended that you set the BaseLink property (the link to the current
+data view), especially if it could change, such as from a create/update/delete
+command on the data that then returns to the view with a different URI. This
+should be the URI without the pagination link. Pagination.cfc will discover the
+base link for itself if one is not provided.<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset
+pagination.setBaseLink("/app/photolist.cfm?year=2007") /&gt;</span><br>
+<br>
+Another important property you may want to tweak is the ItemsPerPage property. A
+single message view will only want 1 item per page, while for a large list, you
+may want 100. The default value is 10.<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset pagination.setItemsPerPage(25)
+/&gt;</span><br>
+<br>
+Another important property is UrlPageIndicator, which tells Pagination.cfc what
+URL variable to use for managing the paging index. The default value is
+"pagenumber" and you can change it.<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset
+pagination.setUrlPageIndicator("page") /&gt;</span><br>
+<br>
+The final important property for this abbreviated list is ShowNumericLinks. This
+boolean property turns on and off the display of numbered pages. When
+ShowNumericLinks is <i>false</i>, which is the default, the rendered HTML will
+output previous and next controls but no numbers. When it is set to <i>true</i>,
+the numbering is displayed. The numbers that are displayed depends on the other
+options, such as the NumericDistanceFromCurrentPageVisible and
+NumericEndBufferCount properties.<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset
+pagination.setShowNumericLinks(true) /&gt;</span><br>
+<br>
+Please see the reference in the next section of this document for a list of all
+the properties you can use to customize and tweak the pagination display.<br>
+<br>
+<p>
+  <b>5. Output the generated HTML from Pagination.cfc.</b>
+</p>
+<p>
+  <br>
+</p>
+<span style="FONT-FAMILY:Courier New">#pagination.getRenderedHTML()#</span><br>
+<br>
+Pagination.cfc caches the rendered output, so subsequent calls will cause no
+performance decrease. The cache is reset if you change a property such as the
+number of items per page.<br>
+<br>
+<p>
+  <b>6. Use the calculated properties in Patination.cfc in other places</b>
+</p>
+<p>
+  <br>
+</p>
+Pagination.cfc will calculate some fields you may need such as
+TotalNumberOfPages, CurrentPage, StartRow and EndRow. These are discussed in
+more detail in the reference section at the end of this document.<br>
+<br>
+&lt;cfoutput query="myQuery" startrow="#pagination.getStartRow()#"
+maxrows="#pagination.getMaxRows()#"&gt;<br>
+&nbsp;<br>
+<br>
+The final block of code, using the above options, will look like this.<br>
+<span style="FONT-FAMILY:Courier New"><br>
+&lt;cfset <font size=2>pagination </font>= createObject("component",
+"components.Pagination").init() /&gt;<br>
+&lt;cfset pagination.setQueryToPaginate(myQuery) /&gt;<br>
+&lt;cfset pagination.setBaseLink("/app/photolist.cfm?year=2007") /&gt;<br>
+&lt;cfset pagination.setItemsPerPage(25) /&gt;<br>
+&lt;cfset pagination.setUrlPageIndicator("page") /&gt;<br>
+&lt;cfset pagination.setShowNumericLinks(true) /&gt;<br>
+<br>
+#pagination.getRenderedHTML()#<br>
+&lt;cfoutput query="myQuery" startrow="#pagination.getStartRow()#"
+maxrows="#pagination.getMaxRows()#"&gt;<br>
+&nbsp;&nbsp; &lt;li&gt;#id# - #name#&lt;/li&gt;<br>
+&lt;/cfoutput&gt;<br>
+#pagination.getRenderedHTML()#<br>
+</span><br>
+<br>
+<h2>
+</h2>
+<h2>
+</h2>
+<h2>
+  <a id=xqc0 name=Section4></a>4. Pagination.cfc Property Reference
+</h2>
+All of these properties are retrievable by use of getter methods. Almost all of
+them are transmutable (you can change them) via setter methods. As shown in the
+previous examples, you will call get<i>Property</i>() and
+set<i>Property</i>(<i>Value</i>) where <i>Property</i> is one of the below
+listed properties and <i>Value</i> is a valid type value for the given property.<br>
+<br>
+Some types have aliases, which are sometimes friendlier alternatives to the
+given name. For example, you can set the ItemsPerPage value, but within a
+cfquery tag, it makes more sense to call it MaxRows (see the example in section
+3). You can use these aliases interchangeably.<br>
+<br>
+The CFC itself documents these properties with hints, but you can use this list
+as an offline reference.<br>
+<br>
+<br>
+<font size=3><b>Essential Properties</b></font><br>
+<b>QueryToPaginate </b>(query, alias:Query)<br>
+The query object to paginate. QueryToPaginate, ArrayToPaginate or
+StructToPaginate are the only required fields; one of these must be set.<br>
+<br>
+<b>ArrayToPaginate </b>(array, alias:Array)<br>
+An array object to paginate instead of a query. QueryToPaginate, ArrayToPaginate
+or StructToPaginate are the only required fields; one of these must be set.<br>
+<br>
+<b>StructToPaginate </b>(struct, alias:Struct)<br>
+A struct to paginate over instead of a query or an array. Will create its own
+ordered key list if one is not provided (as the 2nd argument). QueryToPaginate,
+ArrayToPaginate or StructToPaginate are the only required fields; one of these
+must be set.<br>
+<br>
+<b>ItemsPerPage </b>(numeric; alias:MaxRows)<br>
+Number of items to display per page.<br>
+<br>
+<b>BaseLink </b>(string, default:calculated)<br>
+The link to the current page. If one is not given, Pagination.cfc will guess
+based on the current URL. This can have bad side-effects if there is more than
+one URI that accesses the same data, such as an update or delete command to a
+list.<br>
+<br>
+<b>UrlPageIndicator</b> (string, default:pagenumber)<br>
+The URL variable used to track the current page number.<br>
+<br>
+<b>CompressHTML</b> (boolean, default:false)<br>
+Option to remove whitespace from the generated HTML and combine to one line. It
+is possible, though unlikely, that this can cause formatting issues if you rely
+on whitespace for character spacing, etc.<br>
+<br>
+<br>
+<font size=3><b>Number Related Properties</b></font><br>
+<b>ShowNumericLinks </b>(boolean, default:false)<br>
+Option to display linked pagination numbers. Without, you will see something
+like:<br>
+&lt; Previous Next &gt;<br>
+With this option enabled, you will see something like:<br>
+&lt;Previous <b>1</b> 2 3 Next &gt;<br>
+<br>
+<b>NumericDistanceFromCurrentPageVisible </b>(numeric, default:3)<br>
+The count of numeric links to display on either side of the currently selected
+page. A count of 1 may display:<br>
+1 2 ... 28 <b>29</b> 30 ... 49 50<br>
+A count of 4 may display:<br>
+1 2 ... 25 26 27 28 <b>29</b> 30 31 32 33 ... 49 50<br>
+<br>
+<b>NumericEndBufferCount </b>(numeric, default:2)<br>
+The count of end "buffer" numbers for either side. A count of 1 may display:<br>
+1 ... 27 28 <b>29</b> 30 31 ... 50<br>
+A count of 5 may display:<br>
+1 2 3 4 5 ... 27 28 <b>29</b> 30 31 ... 46 47 48 49 50<br>
+<br>
+<b>ShowMissingNumbersHTML </b>(boolean, default:true)<br>
+Option to display HTML between numbers when one or more numbers are skipped.
+This is the same as setting the MissingNumbersHTML value to "".<br>
+<br>
+<b>MissingNumbersHTML </b>(string, default:"...")<br>
+HTML to place where numbers are skipped. The default value will display:<br>
+<b>1</b> 2 3 ... 10<br>
+Changing the value to "&lt;sub&gt;skip a few&lt;/sub&gt;" will display:<br>
+1 2 3 <sub>skip a few</sub> 10<br>
+<br>
+<b>BeforeNumericLinksHTML</b> (string)<br>
+HTML to place between any Previous link and the numeric links (if numeric links
+are enabled).<br>
+<br>
+<b>BeforeNextLinkHTML</b> (string)<br>
+HTML to place between numeric links and any Next link<br>
+<br>
+<br>
+<font size=3><b>Next/Previous Control Related Properties</b></font><br>
+<b>ShowPrevNextHTML </b>(boolean, default:true)<br>
+Option to display Previous and Next controls. If you turn this off, please turn
+on ShowNumericLinks so the numeric navigation is displayed.<br>
+<br>
+<b>PreviousLinkHTML </b>(string, default:"&amp;lt; Previous")<br>
+HTML to display for the previous page link. The link to the previous page will
+automatically be placed around this HTML. Remember to use HTML entities to
+escape illegal characters such as &lt; and &gt;.<br>
+<br>
+<b>NextLinkHTML </b>(string, default:"Next &amp;gt;")<br>
+HTML to display for the next page link. The link to the next page will
+automatically be placed around this HTML. Remember to use HTML entities to
+escape illegal characters such as &lt; and &gt;.<br>
+<br>
+<b>ShowPrevNextDisabledHTML </b>(boolean, default:true)<br>
+Option to display previous and next links while on the first and last pages,
+respectively.<br>
+<br>
+<b>PreviousLinkDisabledHTML </b>(string, default:"&amp;lt; Previous")<br>
+HTML to display for the previous page link when the link is not active because
+you are on the first page. Remember to use HTML entities to escape illegal
+characters such as &lt; and &gt;.<br>
+<br>
+<b>NextLinkDisabledHTML </b>(string, default:"Next &amp;gt;")<br>
+HTML to display for the next page link when the link is not active because you
+are on the last page. Remember to use HTML entities to escape illegal characters
+such as &lt; and &gt;.<br>
+<br>
+<b>ShowFirstLastHTML </b>(boolean, default:false)<br>
+Option to display link controls to jump to the first and last pages.<br>
+<br>
+<b>FirstLinkHTML </b>(string, default:"&amp;lt;&amp;lt; First")<br>
+HTML to display for the first page link. The link to the first page will
+automatically be placed around this HTML. Remember to use HTML entities to
+escape illegal characters such as &lt; and &gt;.<br>
+<br>
+<b>LastLinkHTML </b>(string, default:"Last &amp;gt;&amp;gt;")<br>
+HTML to display for the last page link. The link to the last page will
+automatically be placed around this HTML. Remember to use HTML entities to
+escape illegal characters such as &lt; and &gt;.<br>
+<br>
+<b>ShowFirstLastDisabledHTML </b>(boolean, default:false)<br>
+Option to display first and last link controls while on the first and last
+pages, respectively. If enabled, the FirstLinkDisabledHTML and
+LastLinkDisabledHTML will be used<br>
+<br>
+<b>FirstLinkDisabledHTML </b>(string, default:"&amp;lt;&amp;lt; First")<br>
+HTML to display for the first page link placeholder when the link is not active
+because you are on the first page. Remember to use HTML entities to escape
+illegal characters such as &lt; and &gt;.<br>
+<br>
+<b>LastLinkDisabledHTML </b>(string, default:"Last &amp;gt;&amp;gt;")<br>
+HTML to display for the last page link placeholder when the link is not active
+because you are on the last page. Remember to use HTML entities to escape
+illegal characters such as &lt; and &gt;.<br>
+<br>
+<br>
+<font size=3><b>Calculated Properties<br>
+</b><font size=2>These properties do not have public setters. Do not attempt to
+set these properties, but please use them.</font><br>
+</font><br>
+<b>TotalNumberOfPages </b>(numeric, default:calculated)<br>
+The total number of pages to be paginated over. This is calculated based upon
+the total number of items to display and the number of items to display per
+page.<br>
+<br>
+<b>CurrentPage </b>(numeric, default:calculated)<br>
+The page the user is currently viewing. This is taken from the URL page number
+variable. Please call this instead of #url.pagenumber#, as the URL variable name
+can be changed.<br>
+<br>
+<b>StartRow </b>(numeric, default:calculated)<br>
+The starting row for the current page. Use this in your output loop to set the
+first row to display on the page. This should match up with you cfoutput
+startrow attribute.<br>
+<br>
+<b>EndRow </b>(numeric, default:calculated)<br>
+The last row displayed on the current page. This property is for your
+convenience.<br>
+<br>
+<b>TotalNumberOfItems </b>(numeric, default:calculated)<br>
+Number of items in your data that will be paginated over.<br>
+<br>
+<b>FirstPageLink </b>(string)<br>
+Link to the first page.<br>
+<br>
+<b>PreviousPageLink </b>(string)<br>
+Link to the previous sequential page.<br>
+<br>
+<b>NextPageLink </b>(string)<br>
+Link to the next sequential page.<br>
+<br>
+<b>LastPageLink </b>(string)<br>
+Link to the last page.<br>
+<br>
+<b>RenderedHTML </b>(string)<br>
+The calculated and rendered HTML output. Call for this to retrieve your
+pagination four outputting directly into your page.<br>
+<br>
+<br>
+<h2>
+  <a id=tqw6 name=Section5></a>5. Pagination.cfc Styling Reference<br>
+</h2>
+Use stylesheets is the way to make Pagination.cfc's output look the way you want
+it to. As such, I have created this quick reference.<br>
+<br>
+Here is an outline of the HTML for CSS reference:<br>
+<br>
+<font size=2 style="FONT-FAMILY:Courier New">&lt;div class="pagination
+<i>custom</i>"&gt;&lt;!-- can include your own custom class --&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;a class="first"&gt;First Page&lt;/a&gt; OR &lt;span
+class="first"&gt;Disabled First page Link&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;a class="previous"&gt;Previous Page&lt;/a&gt; OR &lt;span
+class="first"&gt;Disabled First page Link&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &lt;a&gt;1&lt;/a&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;span
+class="current"&gt;2&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a&gt;3&lt;/a&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;a class="next"&gt;Next Page&lt;/a&gt; OR &lt;span
+class="next"&gt;Disabled First page Link&lt;/span&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;a class="last"&gt;Last Page&lt;/a&gt; OR &lt;span
+class="last"&gt;Disabled First page Link&lt;/span&gt;<br>
+&lt;/div&gt;</font><br>
+<br>
+Now, here is some basic CSS I recommend to get you started styling your
+pagination output:<br>
+<br>
+div.pagination a { border:1px solid blue; text-decoration:none; padding:4px;
+marign:0 4px; }<br>
+div.pagination span { marign:0 4px; }<br>
+<br>
+This will surround linked elements with a nice box and space them out a bit.<br>
+<br>
+Also, please note the numerous styled demo examples included with the download
+where you can see both execution and styling examples in action.<br>
+<br>
+<br>
+<h2>
+  <a id=ak6m name=Section6></a>6. Extending Pagination.cfc
+</h2>
+In order to provide deeper customization to your application, you may want to
+extend pagination.cfc. As a large number of ColdFusion developers don't know
+what this involves, I will provide an example.<br>
+<br>
+Let's say that you want your pagination to output in this format:<br>
+<br>
+&lt;&lt;&nbsp; &lt;&nbsp; Page 7 of 9&nbsp; &gt;&nbsp; &gt;&gt;<br>
+<br>
+There are two ways to do it. First, you can write the HTML on your .cfm page
+like this:<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset <font size=2>pagination </font>=
+createObject("component", "components.Pagination").init() /&gt;<br>
+&lt;cfset pagination.setQueryToPaginate(myQuery) /&gt;<br>
+<br>
+&lt;a href="#pagination.getFirstPageLink()#"&gt;&amp;lt;&amp;lt;&lt;/a&gt;<br>
+</span><span style="FONT-FAMILY:Courier New">&lt;a
+href="#pagination.getPreviousPageLink()#"&gt;&amp;lt;&amp;lt;&lt;/a&gt;<br>
+Page #pagination.getCurrentPage()# of #pagination.getTotalNumberOfPages()#<br>
+</span><span style="FONT-FAMILY:Courier New">&lt;a
+href="#pagination.getNextPageLink()#"&gt;&amp;lt;&amp;lt;&lt;/a&gt;</span><br>
+<span style="FONT-FAMILY:Courier New">&lt;a
+href="#pagination.getLastPageLink()#"&gt;&amp;lt;&amp;lt;&lt;/a&gt;<br>
+</span><span style="FONT-FAMILY:Courier New"><br>
+</span>This solution is not reusable and not very well separated from the rest
+of your application. It adds a lot of messy code to the page. Instead, consider
+extending Pagination.cfc with a reusable solution. Here is
+Pagination_Custom.cfc:<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfcomponent
+extends="Pagination"&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp; &lt;cffunction
+name="renderHTML"&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp; &lt;cfset var
+renderedOutput="" /&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp; &lt;cfsavecontent
+variable="renderedOutput"&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;cfoutput&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;a href="#getFirstPageLink()#"&gt;&amp;lt;&amp;lt;&lt;/a&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;a
+href="#getPreviousPageLink()#"&gt;&amp;lt;&lt;/a&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Page #getCurrentPage()# of
+#getTotalNumberOfPages()#<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;a
+href="#getNextPageLink()#"&gt;&amp;gt;&lt;/a&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;a
+href="#getLastPageLink()#"&gt;&amp;gt;&amp;gt;&lt;/a&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;/cfoutput&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp;
+&lt;/cfsavecontent&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;&nbsp;&nbsp; &lt;cfreturn
+renderedOutput /&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&nbsp;
+&lt;/cffunction&gt;</span><br style="FONT-FAMILY:Courier New">
+<span style="FONT-FAMILY:Courier New">&lt;/cfcomponent&gt;</span><br>
+<br>
+This new solution overrides the renderHTML() private method in Pagination.cfc.
+When you call getRenderedHTML(), it will run this method to render the HTML
+instead of the default method. This cleans up the code required on your cfm page
+as well. The following example shows how to use this new solution:<br>
+<br>
+<span style="FONT-FAMILY:Courier New">&lt;cfset <font size=2>pagination </font>=
+createObject("component", "components.Pagination_Custom").init() /&gt;<br>
+&lt;cfset pagination.setQueryToPaginate(myQuery) /&gt;<br>
+#pagination.getRenderedHTML()#<br>
+</span><br>
+<br>
+<br></body>
+</html>
