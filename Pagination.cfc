@@ -1,7 +1,6 @@
 <cfcomponent output="false">
 
 <!---
-
       Pagination.cfc
 /---------^---------------------------------------------------------------------------------------\
 Nathan Strutz | strutz@gmail.com | http://www.dopefly.com/
@@ -13,15 +12,16 @@ License: BSD
       History
 /---------^---------------------------------------------------------------------------------------\
 Version 1.0 - 9/20/2008 - Release!
+Version 2.0 - 11/20/2016 - notes go here...
 
 
 
       Enhancements under consideration
 /---------^---------------------------------------------------------------------------------------\
 "Bridging" numbers like amazon - 1 number out of range will show if it bridges the "..." gap.
-	// « Previous|Page:1 2 3 ... |Next »        page 1, 1000 pages total
-	// « Previous|Page:1 2 3 4 5 ... |Next »    page 4  <--- this is a sticky #2!
-	// « Previous|Page:1 ... 5 6 7 ... |Next »  page 6
+	// Â« Previous|Page:1 2 3 ... |Next Â»        page 1, 1000 pages total
+	// Â« Previous|Page:1 2 3 4 5 ... |Next Â»    page 4  <--- this is a sticky #2!
+	// Â« Previous|Page:1 ... 5 6 7 ... |Next Â»  page 6
 Separate Left and Right (beginning and end) numeric padding - does anyone care?
 Show exactly this number maximum, e.g. sticky is 5 but we are on pg.1, show 11 on pg.1 and 5
 Number separators, 1 | 2 | 3 or 1, 2, 3
@@ -40,7 +40,7 @@ http://woork.blogspot.com/2008/03/perfect-pagination-style-using-css.html
       Suggested Use Example:
 /---------^---------------------------------------------------------------------------------------\
 <cfset pagination = createObject("component", "Pagination").init() />
-<cfset pagination.setQueryToPaginate(myQuery) /><!--- required --->
+<cfset pagination.setNumberOfItems(myQuery.recordcount) /><!--- required --->
 <cfset pagination.setBaseLink("/app/photolist.cfm?year=#year#") /><!--- recommended --->
 <cfset pagination.setItemsPerPage(25) /><!--- default is 10 --->
 <cfset pagination.setShowNumericLinks(true) /><!--- default is false, will not display numbers --->
@@ -53,6 +53,7 @@ http://woork.blogspot.com/2008/03/perfect-pagination-style-using-css.html
 
 #pagination.getRenderedHTML()#
 
+You will find much more information at http://www.dopefly.com/projects/pagination/
 
 
      Copyright Notice (BSD License)
@@ -64,12 +65,12 @@ All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted
 provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, this list of
+	* Redistributions of source code must retain the above copyright notice, this list of
 	  conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of
+	* Redistributions in binary form must reproduce the above copyright notice, this list of
 	  conditions and the following disclaimer in the documentation and/or other materials provided
 	  with the distribution.
-    * Neither the name of Pagination.cfc nor the names of its contributors may be used to endorse or
+	* Neither the name of Pagination.cfc nor the names of its contributors may be used to endorse or
 	  promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -115,12 +116,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<cfset setBeforeNextLinkHTML("") />
 
 		<cfset setClassName("") />
-		<!--- Configuration Options --->
-		<cfset variables.my.QueryToPaginate = 0 />
-		<cfset variables.my.ArrayToPaginate = 0 />
-		<cfset variables.my.StructToPaginate = 0 />
-		<cfset variables.my.PaginationDataType = "query" />
 
+		<!--- Configuration Options --->
+		<cfset setNumberOfItems(0) />
 		<cfset setItemsPerPage(10) />
 		<cfset setBaseLink("") />
 		<cfset setUrlPageIndicator("pagenumber") />
@@ -135,25 +133,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<cfset variables.my.rendered = false />
 		<cfset variables.my.configured = false />
 		<cfset variables.my.paginationTextRendered = false />
-
-
-		<!--- logical shortcut: query = queryToPaginate --->
-		<cfset variables.getQuery = variables.getQueryToPaginate />
-		<cfset this.getQuery = this.getQueryToPaginate />
-		<cfset variables.setQuery = variables.setQueryToPaginate />
-		<cfset this.setQuery = this.setQueryToPaginate />
-
-		<!--- logical shortcut: array = arrayToPaginate --->
-		<cfset variables.getArray = variables.getArrayToPaginate />
-		<cfset this.getArray = this.getArrayToPaginate />
-		<cfset variables.setArray = variables.setArrayToPaginate />
-		<cfset this.setArray = this.setArrayToPaginate />
-
-		<!--- logical shortcut: struct = structToPaginate --->
-		<cfset variables.getStruct = variables.getStructToPaginate />
-		<cfset this.getStruct = this.getStructToPaginate />
-		<cfset variables.setStruct = variables.setStructToPaginate />
-		<cfset this.setStruct = this.setStructToPaginate />
 
 		<!--- locical shortcut: Items Per Page = cfquery MaxRows --->
 		<cfset variables.getMaxRows = variables.getItemsPerPage />
@@ -350,48 +329,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	</cffunction>
 
 <!--- -------------- Configuration Options -------------- --->
-	<cffunction name="getQueryToPaginate" returntype="query" output="false" access="public" hint="The query you will be paginating through. This property is required!">
-		<cfif not isQuery(variables.my.QueryToPaginate)>
-			<cfthrow message="You did not define the query to paginate." detail="You attempted to use the QueryToPaginate property, but have not yet set it. You must set the property with setQueryToPaginate(myQuery) before you can use it." />
-		</cfif>
-		<cfreturn variables.my.QueryToPaginate />
+	<cffunction name="getNumberOfItems" returntype="numeric" output="false" access="public" hint="The number of records, via query.recordcount, arraylen(data), or what have you. This property is required!">
+		<cfreturn variables.my.NumberOfItems />
 	</cffunction>
-	<cffunction name="setQueryToPaginate" output="false" access="public" hint="The query you will be paginating through. This property is required!">
-		<cfargument name="_QueryToPaginate" type="query" />
-		<cfset variables.my.QueryToPaginate = arguments._QueryToPaginate />
+	<cffunction name="setNumberOfItems" output="false" access="public" hint="The number of records you will be paginating through. This property is required!">
+		<cfargument name="_NumberOfItems" type="numeric" />
+		<cfset variables.my.NumberOfItems = arguments._NumberOfItems />
 		<cfset variables.my.rendered = false />
 		<cfset variables.my.configured = false />
-		<cfset variables.my.paginationDataType = "query" />
-	</cffunction>
-
-	<cffunction name="getArrayToPaginate" returntype="Array" output="false" access="public">
-		<cfif not isArray(variables.my.ArrayToPaginate)>
-			<cfthrow message="You did not define the array to paginate." detail="You attempted to use the ArrayToPaginate property, but have not yet set it. You must set the property with setArrayToPaginate(myArray) before you can use it." />
-		</cfif>
-		<cfreturn variables.my.ArrayToPaginate />
-	</cffunction>
-	<cffunction name="setArrayToPaginate" output="false" access="public">
-		<cfargument  name="_ArrayToPaginate" type="Array" />
-		<cfset variables.my.ArrayToPaginate = arguments._ArrayToPaginate />
-		<cfset variables.my.rendered = false />
-		<cfset variables.my.configured = false />
-		<cfset variables.my.paginationDataType = "array" />
-	</cffunction>
-
-	<cffunction name="getStructToPaginate" returntype="struct" output="false" access="public">
-		<cfif not isStruct(variables.my.StructToPaginate)>
-			<cfthrow message="You did not define the struct to paginate." detail="You attempted to use the StructToPaginate property, but have not yet set it. You must set the property with setStructToPaginate(myStruct) before you can use it." />
-		</cfif>
-		<cfreturn variables.my.StructToPaginate />
-	</cffunction>
-	<cffunction name="setStructToPaginate" output="false" access="public">
-		<cfargument  name="_StructToPaginate" type="struct" />
-		<cfargument  name="_OrderedKeyList" type="string" default="#structKeyList(arguments._StructToPaginate)#" />
-		<cfset variables.my.StructToPaginate = arguments._StructToPaginate />
-		<cfset variables.my.OrderedKeyList = arguments._OrderedKeyList />
-		<cfset variables.my.rendered = false />
-		<cfset variables.my.configured = false />
-		<cfset variables.my.paginationDataType = "struct" />
 	</cffunction>
 
 	<cffunction name="getItemsPerPage" returntype="numeric" output="false" access="public" hint="Number of records per page to display. Default is 10.">
@@ -507,18 +452,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<!--- TODO: EndRow could be public and set instead of (or in addition to) ItemsPerPage, itemsPerPage would then be recalculated - logic could go both ways --->
 	</cffunction>
 
-	<cffunction name="getTotalNumberOfItems" returntype="numeric" output="false" access="public" hint="The total number of records, indexes, keys, etc., in the given data to paginate.">
-		<!--- has to be calculated --->
-		<cfif not variables.my.configured>
-			<cfset configureInputs() />
-		</cfif>
-		<cfreturn variables.my.TotalNumberOfItems />
-	</cffunction>
-	<cffunction name="setTotalNumberOfItems" output="false" access="private" hint="The total number of records, indexes, keys, etc., in the given data to paginate.">
-		<cfargument  name="_TotalNumberOfItems" type="numeric" />
-		<cfset variables.my.TotalNumberOfItems = arguments._TotalNumberOfItems />
-	</cffunction>
-
 	<cffunction name="getFirstPageLink" returntype="string" output="false" access="public" hint="Link to first page">
 		<cfreturn "#getBaseLink()##getUrlPageIndicator()#=1" />
 	</cffunction>
@@ -542,7 +475,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	<cffunction name="hasMinimumAttributesToRender" returntype="boolean" access="public" hint="Determines if the requirements are met for rendering the pagination HTML.">
 		<!--- either was already rendered, or if not, has the minimum requirements for rendering --->
 		<cftry>
-			<cfreturn variables.my.rendered or len(variables.my.baseLink) and (isQuery(variables.my.queryToPaginate) OR isArray(variables.my.arrayToPaginate) OR isStruct(variables.my.structToPaginate) ) />
+			<cfreturn variables.my.rendered or len(variables.my.baseLink) and isNumeric(variables.my.NumberOfItems) />
 			<cfcatch><cfreturn false /></cfcatch>
 		</cftry>
 	</cffunction>
@@ -554,7 +487,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<cftrace category="Pagination" text="Call to render HTML" />
 
 		<cfif not hasMinimumAttributesToRender()>
-			<cfthrow message="You must supply the query, array or struct to paginate before rendering the output." detail="This message may also mean that you did not call init() when you initially created the object.<br/>Please call init to initialize this component: <code>createObject('component','[...]Pagination').init()</code>" />
+			<cfthrow message="You must supply the minimum amount of information before rendering the output." detail="This message may also mean that you did not call init() when you initially created the object.<br/>Please call init to initialize this component: <code>createObject('component','[...]Pagination').init()</code> or <code>new Pagination()</code> will do it." />
 		</cfif>
 
 		<cfif not variables.my.configured>
@@ -587,18 +520,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	<cffunction name="configureInputs" returntype="void" output="false" access="private" hint="Sets the query start row and makes sure your URL page number indicator is not broken.">
 		<cfscript>
 			var urlPageNo = 1;
-			var numberOfRecords = 0;
 
-			if (variables.my.PaginationDataType EQ "query") {
-				numberOfRecords = getQueryToPaginate().recordcount;
-			} else if (variables.my.PaginationDataType EQ "array") {
-				numberOfRecords = arrayLen(getArrayToPaginate());
-			} else if (variables.my.PaginationDataType EQ "struct") {
-				numberOfRecords = listLen(variables.my.OrderedKeyList);
-			}
-
-			setTotalNumberOfItems( numberOfRecords );
-			setTotalNumberOfPages( Ceiling(numberOfRecords / getItemsPerPage()) );
+			setTotalNumberOfPages( Ceiling(getNumberOfItems() / getItemsPerPage()) );
 
 			if (structKeyExists(url, getUrlPageIndicator())) {
 				urlPageNo = url[getUrlPageIndicator()];
@@ -607,7 +530,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			// safety measure for URL pagination variable
 			if (not isNumeric(urlPageNo) or urlPageNo LT 1) {
 				urlPageNo = 1;
-			} else if (urlPageNo GT variables.my.TotalNumberOfPages and numberOfRecords) {
+			} else if (urlPageNo GT variables.my.TotalNumberOfPages and getNumberOfItems()) {
 				// url page number is higher than number of pages possible
 				urlPageNo = variables.my.TotalNumberOfPages;
 			}
@@ -620,7 +543,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			// set query start row for the currently selected page number
 			setStartRow( (urlPageNo - 1) * getItemsPerPage() + 1 );
 			// set query end row - this is the last row number visible on the page
-			setEndRow( min(urlPageNo * getItemsPerPage(), numberOfRecords) );
+			setEndRow( min(urlPageNo * getItemsPerPage(), getNumberOfItems()) );
 
 			// make sure there is a base link
 			if (getBaseLink() EQ "?" or getBaseLink() EQ "&amp;") {
