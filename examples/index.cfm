@@ -67,13 +67,13 @@
 
 <cfif use EQ "query">
 	<cfinclude template="samplequery.cfm">
-	<cfset pagination.setQueryToPaginate(sampleQuery) />
+	<cfset pagination.setNumberOfItems(sampleQuery.recordcount) />
 <cfelseif use EQ "array">
 	<cfinclude template="samplearray.cfm">
-	<cfset pagination.setArrayToPaginate(sampleArray) />
+	<cfset pagination.setNumberOfItems( arrayLen(sampleArray) ) />
 <cfelseif use EQ "struct">
 	<cfinclude template="samplestruct.cfm">
-	<cfset pagination.setStructToPaginate(sampleStruct, arrayToList(sortedKeys)) />
+	<cfset pagination.setNumberOfItems( structCount(sampleStruct)) />
 </cfif>
 
 <cfscript>
@@ -126,10 +126,10 @@
 	} else if (url.style EQ "amazon1") {
 
 		// Like Amazon
-		// « Previous|Page:1 2 3 |Next »            page 1, 3 pages total
-		// « Previous|Page:1 2 3 ... |Next »        page 1, 1000 pages total
-		// « Previous|Page:1 2 3 4 5 ... |Next »    page 4    <--- is this a sticky #2? show if it bridges the gap?
-		// « Previous|Page:1 ... 5 6 7 ... |Next »  page 6
+		// ï¿½ Previous|Page:1 2 3 |Next ï¿½            page 1, 3 pages total
+		// ï¿½ Previous|Page:1 2 3 ... |Next ï¿½        page 1, 1000 pages total
+		// ï¿½ Previous|Page:1 2 3 4 5 ... |Next ï¿½    page 4    <--- is this a sticky #2? show if it bridges the gap?
+		// ï¿½ Previous|Page:1 ... 5 6 7 ... |Next ï¿½  page 6
 
 		pagination.setShowNumericLinks(true);
 		pagination.setNumericDistanceFromCurrentPageVisible(1);
